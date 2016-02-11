@@ -1,5 +1,7 @@
 package it.unipi.hashcode.qualificationround;
 
-public class DeliveryPoints {
-
+public class DeliveryPoint {
+	int x;
+	int y;
+	
 }

@@ -13,7 +13,13 @@ public class Simulation {
 	int C; //number of customers orders
 	
 	List<Warehouse> warehouses;
-	List<DeliveryPoints> deliveryPoints;
+	List<DeliveryPoint> deliveryPoints;
 	List<Drone> drones;
-	Map<Drone,Warehouse> clusters;
+	Map<Drone,Warehouse> droneCluster;
+	Map<DeliveryPoint,Warehouse> warehouseCluster;
+	List<Order> orders;
+	
+	public String simulate(){
+		return null;
+	}
 }
