@@ -1,13 +1,16 @@
 package it.unipi.hashcode.qualificationround;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Simulation {
 	int rowsArea;
 	int colsArea;
-	int D; // number of drones
+	int D; // number of drones 1<=D<=1000
 	int deadline;
 	int maxPayloadDrone;
 	int W; // number of warehouses 1<=W<=10000
@@ -19,7 +22,7 @@ public class Simulation {
 	Map<Drone, Warehouse> droneCluster;
 	Map<DeliveryPoint, Warehouse> deliveryCluster;
 	List<Order> orders;
-	
+	Map<Warehouse,HashSet<Product>> demands;
 	
 	
 
@@ -39,6 +42,7 @@ public class Simulation {
 		this.droneCluster = new HashMap<Drone, Warehouse>(drones.size());
 		this.deliveryCluster = new HashMap<DeliveryPoint, Warehouse> (deliveryPoints.size());
 		this.orders = orders;
+		this.demands = new HashMap<Warehouse,HashSet<Product>>(W);
 	}
 
 	public int getRowsArea() {
@@ -162,7 +166,42 @@ public class Simulation {
 		}
 		//Create association Drone - Warehouse
 		int deliveryPointsNumber = deliveryPoints.size();
-		
+		int alreadyComputedDrones = 0;
+		for (Warehouse w : warehouses){
+			//Compute drones per warehouse
+			int dw = deliveryPointsPerWarehouse(w);
+			int percentage = (dw /deliveryPointsNumber)*D;
+			for(int i =0;i<percentage;++i){
+			    Drone currentDrone = drones.get(i+alreadyComputedDrones);
+			    droneCluster.put(currentDrone,w);
+			}
+			alreadyComputedDrones += percentage;
+		}
+		//Distribute uniformely random the remaining drones
+		if(alreadyComputedDrones<D){
+			int missingDrones = D - alreadyComputedDrones;
+			for(int i =0;i<missingDrones;++i){
+				Random r  = new Random();
+				int pivot = r.nextInt(W);
+				Drone currentDrone = drones.get(i+alreadyComputedDrones);
+				Warehouse w = warehouses.get(pivot);
+				droneCluster.put(currentDrone,w);
+			}
+		}
+		//Compute demands for all warehouses
+		for(Order o:orders){
+			DeliveryPoint dp = o.getdPoint();
+			Warehouse w = deliveryCluster.get(dp);
+			if(!demands.containsKey(w)){
+				demands.put(w, new HashSet<Product>());
+			}
+			HashSet<Product> wDemands = demands.get(w);
+			List<Product> currentDemand = o.getItems();
+			for(Product p: currentDemand){
+				Product toSum = wDemands.contains(p)
+			}
+			
+		}
 		return null;
 	}
 
@@ -173,4 +212,13 @@ public class Simulation {
 		return (int) Math.ceil(result);
 	}
 	
+	public int deliveryPointsPerWarehouse(Warehouse w){
+		int i =0;
+		for(DeliveryPoint d : deliveryPoints){
+			if(deliveryCluster.get(d)==w){
+				i++;
+			}
+		}
+		return i;
+	}
 }

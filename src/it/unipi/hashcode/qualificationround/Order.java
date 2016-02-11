@@ -7,14 +7,14 @@ public class Order {
 
 	DeliveryPoint dPoint;
 	
-	List<ProductType> items;
+	List<Product> items;
 	
 	public Order(DeliveryPoint dPoint){
 		this.dPoint = dPoint;
-		items = new ArrayList<ProductType>();
+		items = new ArrayList<Product>();
 	}
 	
-	public void addItem(ProductType pt){
+	public void addItem(Product pt){
 		items.add(pt);
 	}
 
@@ -26,11 +26,11 @@ public class Order {
 		this.dPoint = dPoint;
 	}
 
-	public List<ProductType> getItems() {
+	public List<Product> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ProductType> items) {
+	public void setItems(List<Product> items) {
 		this.items = items;
 	}
 	
